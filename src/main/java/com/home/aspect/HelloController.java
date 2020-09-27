@@ -41,6 +41,8 @@ public class HelloController {
     public TestDTO2 sample3(String sampleName) {
     	TestDTO testDTO = new TestDTO();
     	testDTO.setAge("4566777");
+    	testDTO.setCardNumber("696876070698769");
+    	testDTO.setCvn("709");
         return testService.createSample3(testDTO, "Ingiriya");
     }
 

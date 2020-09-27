@@ -6,6 +6,7 @@ import com.home.aspect.DTO.TestDTO;
 import com.home.aspect.DTO.TestDTO2;
 
 @Service
+@TestClassAnnotation(name = "one")
 public class testService {
 	public String createSample(String sampleName) {
 
@@ -14,6 +15,7 @@ public class testService {
 	}
 	
 	 @TestAnontation(subjects =  {"maths"}, name = "one")
+	 @TestClassAnnotation(name = "one")
 	public TestDTO createSample1(String sampleName) {
 		TestDTO testDTO = new TestDTO();
 		testDTO.setName(sampleName);

@@ -1,6 +1,6 @@
 package com.home.aspect.DTO;
 
-public class TestDTO {
+public class TestDTO extends BasicTestDTO{
 	
 	private String name;
 	private String age;
@@ -20,6 +20,7 @@ public class TestDTO {
 	public String toString() {
 		return "TestDTO [name=" + name + ", age=" + age + "]";
 	}
+	
 	
 	
 

@@ -1,6 +1,6 @@
 package com.home.aspect.DTO;
 
-public class TestDTO2 {
+public class TestDTO2 extends BasicTestDTO{
     private String hello;
     private TestDTO testDTO;
     

@@ -1,5 +1,6 @@
 package com.home.aspect.aspects;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -85,7 +86,7 @@ public class AspectAdviser {
   @Around("@annotation(com.home.aspect.aspects.TestAnontation)")
   public Object testAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
     System.out.println("Before in Around execution. -Name "+getName(proceedingJoinPoint)+" Subjects: " + Arrays.toString(getSujects(proceedingJoinPoint)));
-    String sampleName = "Rangaaa";
+   
     
     Object[] args = proceedingJoinPoint.getArgs();
     TestDTO testDTO = null;
@@ -93,7 +94,7 @@ public class AspectAdviser {
     String name = getName(proceedingJoinPoint);
     if (name.equals("one")) {
     	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>" + args[0]);
-        
+    	 String sampleName = "Rangaaa" + args[0];
     	testDTO = (TestDTO) proceedingJoinPoint.proceed(new Object[] {sampleName});
     	testDTO.setName(testDTO.getName().toUpperCase());
     	System.out.println("After in arround execution");
@@ -115,19 +116,19 @@ public class AspectAdviser {
   }
   
  
-  
-	@Around("execution(* com.home.aspect.aspects.testService.createSample1 (java.lang.String)) && args(sampleName)")
-public TestDTO aroundTestUsingMethod1(ProceedingJoinPoint proceedingJoinPoint,String sampleName) throws Throwable {
-
-    //LOGGER.info("A request was issued for a sample name: "+sampleName);
-
-	sampleName = "Ranga";
-
-    TestDTO sample = (TestDTO) proceedingJoinPoint.proceed(new Object[] {sampleName});
-    sample.setName(sample.getName().toUpperCase());
-
-    return sample;
-}
+//  
+//	@Around("execution(* com.home.aspect.aspects.testService.createSample1 (java.lang.String)) && args(sampleName)")
+//public TestDTO aroundTestUsingMethod1(ProceedingJoinPoint proceedingJoinPoint,String sampleName) throws Throwable {
+//
+//    //LOGGER.info("A request was issued for a sample name: "+sampleName);
+//
+//	sampleName = "Ranga";
+//
+//    TestDTO sample = (TestDTO) proceedingJoinPoint.proceed(new Object[] {sampleName});
+//    sample.setName(sample.getName().toUpperCase());
+//
+//    return sample;
+//}
 
  
 
@@ -150,4 +151,36 @@ public TestDTO aroundTestUsingMethod1(ProceedingJoinPoint proceedingJoinPoint,St
 	    
 	    return myAnnotation.name();
 	  }
+  
+  /**
+   * reflection 
+   * @param proceedingJoinPoint
+   * @return
+   * @throws Throwable
+   */
+  @Around("execution(* com.home.aspect.aspects.testService.*(..))")
+  public Object testAroundClassLvel(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+    System.out.println("Before in Around execution. -Name "+getName(proceedingJoinPoint)+" Subjects: " + Arrays.toString(getSujects(proceedingJoinPoint)));
+    String sampleName = "Rangaaa";
+    Object[] args = proceedingJoinPoint.getArgs();
+    for(Object x : args) {
+    	String simpleName = x.getClass().getSimpleName();
+    	if (simpleName.equals("TestDTO")) {
+    		Class<?> clazz = x.getClass();
+            Field age = clazz.getDeclaredField("age"); //Note, this can throw an exception if the field doesn't exist.
+            age.setAccessible(true);
+            Object fieldValue = age.get(x);
+            age.set(x, fieldValue + "sdfg");
+          
+            System.out.println("++++^^^^^^^^^^^^^^^^^^>>" +age.get(x));
+    	}
+        
+    }
+    
+    Object proceed = proceedingJoinPoint.proceed(args);
+    System.out.println("+++++++++++++++++++++++++++++++++++++++" +proceedingJoinPoint.getSignature());
+    proceedingJoinPoint.proceed();
+  return proceed;
+  }
+    
 }
